@@ -23,6 +23,9 @@ document.getElementById('task-form').addEventListener('submit', (event) => {
         // Limpiar campo de entrada
         taskInput.value = '';
 
+        // Alerta de éxito
+        alert('¡Nuevo registro agregado!');
+
         // Mostrar notificación
         if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('Nueva tarea agregada', { body: task });
@@ -36,23 +39,22 @@ document.getElementById('task-form').addEventListener('submit', (event) => {
     }
 
     // Verificar si el navegador soporta notificaciones
-if ('Notification' in window) {
-    // Solicitar permiso al usuario
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            // Enviar una notificación de prueba
-            new Notification('¡Hola!', {
-                body: 'Esta es una notificación de prueba para tu celular.',
-                icon: 'icono.png' // Opcional: Agrega la ruta a tu ícono
-            });
-        } else {
-            console.log('Permiso de notificaciones denegado.');
-        }
-    }).catch(error => {
-        console.error('Error al solicitar permisos:', error);
-    });
-} else {
-    console.log('El navegador no soporta notificaciones.');
-}
-
+    if ('Notification' in window) {
+        // Solicitar permiso al usuario
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                // Enviar una notificación de prueba
+                new Notification('¡Hola!', {
+                    body: 'Esta es una notificación de prueba para tu celular.',
+                    icon: 'icono.png' // Opcional: Agrega la ruta a tu ícono
+                });
+            } else {
+                console.log('Permiso de notificaciones denegado.');
+            }
+        }).catch(error => {
+            console.error('Error al solicitar permisos:', error);
+        });
+    } else {
+        console.log('El navegador no soporta notificaciones.');
+    }
 });
