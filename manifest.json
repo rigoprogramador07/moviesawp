@@ -3,8 +3,8 @@
   "short_name": "Cinemarte",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#000000",
+  "theme_color": "#ff7f00", 
   "icons": [
     {
       "src": "Webp.net-resizeimage.png",
