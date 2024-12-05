@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas - PWA</title>
+    
+    <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
@@ -11,25 +16,17 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
+    <!-- Custom Stylesheet -->
     <link href="style.css" rel="stylesheet">
 
-    <!-- Manifest (PWA) -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
 
+    <!-- JivoSite Chat Widget -->
     <script src="//code.jivosite.com/widget/1gSMT3Mxwb" async></script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tareas - PWA</title>
-
-    <!-- Main App Script -->
-    <script defer src="app.js"></script>
-</head>
-
-<body>
+    <!-- Register Service Worker Script -->
     <script>
-        // Registrar el Service Worker
         if ('serviceWorker' in navigator && location.protocol === 'https:') {
             navigator.serviceWorker.register('service-worker.js')
                 .then(reg => console.log('Service Worker registrado:', reg))
@@ -37,6 +34,11 @@
         }
     </script>
 
+    <!-- Main App Script (deferred loading) -->
+    <script defer src="app.js"></script>
+</head>
+
+<body>
     <section class="food_section layout_padding">
         <div class="form-group">
             <div class="container">

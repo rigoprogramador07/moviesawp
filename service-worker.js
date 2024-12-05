@@ -1,4 +1,4 @@
-// Instalar el Service Worker
+// Instalación del Service Worker
 self.addEventListener('install', (event) => {
     console.log('Service Worker instalándose...');
     event.waitUntil(
@@ -10,16 +10,14 @@ self.addEventListener('install', (event) => {
                 '/app.js',
                 '/manifest.json',
                 '/icon.png',
-                '/lib/owlcarousel/assets/owl.carousel.min.css',
-                '/lib/lightbox/css/lightbox.min.css'
             ]);
         })
     );
-    self.skipWaiting(); // Fuerza la activación inmediatamente
+    self.skipWaiting(); // Activar inmediatamente
     console.log('Service Worker instalado');
 });
 
-// Activar el Service Worker
+// Activación del Service Worker
 self.addEventListener('activate', (event) => {
     console.log('Service Worker activado');
     event.waitUntil(
@@ -28,18 +26,17 @@ self.addEventListener('activate', (event) => {
                 cacheNames.map((cacheName) => {
                     if (cacheName !== 'task-cache-v1') {
                         console.log('Cache obsoleto eliminado:', cacheName);
-                        return caches.delete(cacheName); // Elimina los caches viejos
+                        return caches.delete(cacheName); // Elimina los caches antiguos
                     }
                 })
             );
         })
     );
-    // Toma control inmediatamente de las páginas abiertas
-    self.clients.claim();
-    console.log('Service Worker activado y controlando clientes');
+    self.clients.claim(); // Toma control de las páginas abiertas
+    console.log('Service Worker ahora controla las páginas');
 });
 
-// Interceptar las solicitudes de red
+// Manejo de las peticiones de red
 self.addEventListener('fetch', (event) => {
     console.log('Interceptando petición a:', event.request.url);
     event.respondWith(
@@ -49,7 +46,6 @@ self.addEventListener('fetch', (event) => {
             }
             return fetch(event.request)
                 .then((response) => {
-                    // Verifica si la respuesta es válida antes de cachearla
                     if (response && response.status === 200 && response.type === 'basic') {
                         caches.open('task-cache-v1').then((cache) => {
                             cache.put(event.request, response.clone());
@@ -59,19 +55,19 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch((error) => {
                     console.error('Error al hacer la solicitud:', error);
-                    throw error; // Maneja el error adecuadamente
+                    throw error;
                 });
         })
     );
 });
 
-// Manejo de notificaciones push (FCM)
+// Manejo de notificaciones Push
 self.addEventListener('push', (event) => {
     console.log('Notificación Push recibida:', event);
     const data = event.data ? event.data.json() : {};
     const title = data.title || 'Notificación';
     const body = data.body || '¡Tienes una nueva tarea!';
-    const icon = '/icon.png'; // Asegúrate de que la ruta sea correcta
+    const icon = '/icon.png'; 
     const badge = '/icon.png';
 
     const options = {
