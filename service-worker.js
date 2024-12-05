@@ -1,47 +1,4 @@
-// Verifica si el navegador soporta Service Workers
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    navigator.serviceWorker.register('/service-worker.js')
-        .then((registration) => {
-            console.log('Service Worker registrado:', registration);
-
-            // Después de registrar el Service Worker, intentar obtener la suscripción para Push Notifications
-            registration.pushManager.getSubscription()
-                .then((subscription) => {
-                    if (!subscription) {
-                        // Clave pública de FCM (asegúrate de reemplazar con la clave correcta)
-                        const applicationServerKey = 'BOKcIx93kERD-d3-rB0nS-3tRSYxYmXzdeOWa8gH7EU5TvpDMW2gRg44IwrriSVe3LFwuS6UeOMDA0_Oiop0Pmg';
-                        
-                        // Suscribir al cliente para Push Notifications
-                        registration.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array(applicationServerKey)
-                        }).then((subscription) => {
-                            console.log('Suscripción Push:', subscription);
-                        }).catch((error) => {
-                            console.error('Error al suscribirse a Push Notifications:', error);
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error al obtener suscripción:', error);
-                });
-        })
-        .catch((error) => {
-            console.error('Error al registrar el Service Worker:', error);
-        });
-}
-
-// Convertir la clave base64 a Uint8Array (para la suscripción de Push Notifications)
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
+// Service Worker - Instalación, Activación y Notificaciones Push
 
 // Instalar el Service Worker
 self.addEventListener('install', (event) => {
@@ -138,3 +95,15 @@ self.addEventListener('notificationclick', (event) => {
         clients.openWindow('/') // Cambia la URL si necesitas abrir otra página
     );
 });
+
+// Convertir la clave base64 a Uint8Array (para la suscripción de Push Notifications)
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
