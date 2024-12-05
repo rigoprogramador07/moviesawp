@@ -10,28 +10,26 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="style.css" rel="stylesheet">
+
+    <!-- Manifest (PWA) -->
+    <link rel="manifest" href="manifest.json">
+
     <script src="//code.jivosite.com/widget/1gSMT3Mxwb" async></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Tareas - PWA</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
-    <script defer src="app.js"></script>
-    <link rel="stylesheet" href="owl.carousel.min.css">
-    <link rel="stylesheet" href="lightbox.min.css">
-    <link rel="stylesheet" href="styles.css">
 
+    <!-- Main App Script -->
+    <script defer src="app.js"></script>
 </head>
 <body>
     <script>
         // Registrar el Service Worker
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && location.protocol === 'https:') {
             navigator.serviceWorker.register('service-worker.js')
                 .then(reg => console.log('Service Worker registrado:', reg))
                 .catch(err => console.log('Error al registrar el Service Worker:', err));
