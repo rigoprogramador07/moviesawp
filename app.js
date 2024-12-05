@@ -45,36 +45,36 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
-// Manejo de la interfaz de tareas
-document.getElementById('task-form').addEventListener('submit', (event) => {
+// Manejo de la interfaz de películas
+document.getElementById('movie-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const taskInput = document.getElementById('task-input');
-    const task = taskInput.value;
+    const movieInput = document.getElementById('movie-input');
+    const movie = movieInput.value;
 
-    if (task) {
-        // Agregar tarea a la lista de tareas
-        const taskList = document.getElementById('task-list');
+    if (movie) {
+        // Agregar película a la lista
+        const movieList = document.getElementById('movie-list');
         const listItem = document.createElement('li');
-        listItem.textContent = task;
-        taskList.appendChild(listItem);
+        listItem.textContent = movie;
+        movieList.appendChild(listItem);
 
         // Limpiar campo de entrada
-        taskInput.value = '';
+        movieInput.value = '';
 
         // Mostrar alerta
-        alert('¡Nuevo registro agregado!');
+        alert('¡Película agregada a la lista!');
 
         // Verificar si el navegador soporta notificaciones
         if ('Notification' in window) {
             if (Notification.permission === 'granted') {
                 // Si ya se tiene permiso, muestra una notificación
-                new Notification('Nueva tarea agregada', { body: task });
+                new Notification('Nueva película agregada', { body: movie });
             } else if (Notification.permission !== 'denied') {
                 // Si no se ha dado permiso, lo solicitamos
                 Notification.requestPermission().then((permission) => {
                     if (permission === 'granted') {
-                        new Notification('Nueva tarea agregada', { body: task });
+                        new Notification('Nueva película agregada', { body: movie });
                     }
                 });
             }
