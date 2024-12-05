@@ -1,5 +1,3 @@
-// Service Worker - Instalación, Activación y Notificaciones Push
-
 // Instalar el Service Worker
 self.addEventListener('install', (event) => {
     console.log('Service Worker instalándose...');
@@ -17,7 +15,7 @@ self.addEventListener('install', (event) => {
             ]);
         })
     );
-    self.skipWaiting(); // Fuerza la activación del SW inmediatamente
+    self.skipWaiting(); // Fuerza la activación inmediatamente
     console.log('Service Worker instalado');
 });
 
@@ -95,15 +93,3 @@ self.addEventListener('notificationclick', (event) => {
         clients.openWindow('/') // Cambia la URL si necesitas abrir otra página
     );
 });
-
-// Convertir la clave base64 a Uint8Array (para la suscripción de Push Notifications)
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
