@@ -1,40 +1,61 @@
 // Verifica si el navegador soporta Service Workers
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
     navigator.serviceWorker.register('service-worker.js')
         .then((registration) => {
             console.log('Service Worker registrado:', registration);
 
-            // Suscribimos al Service Worker para recibir notificaciones push
-            return registration.pushManager.getSubscription()
-                .then((subscription) => {
-                    if (!subscription) {
-                        // Clave pública de FCM (asegúrate de reemplazar con la clave correcta)
-                        const applicationServerKey = 
-                            'BOKcIx93kERD-d3-rB0nS-3tRSYxYmXzdeOWa8gH7EU5TvpDMW2gRg44IwrriSVe3LFwuS6UeOMDA0_Oiop0Pmg';
-
-                        // Suscribir al cliente
-                        return registration.pushManager.subscribe({
-                            userVisibleOnly: true,
-                            applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-                        });
-                    }
-                    return subscription; // Ya está suscrito
-                })
-                .then((subscription) => {
-                    console.log('Suscripción Push:', subscription);
-
-                    // Extraer el endpoint y el token
-                    const token = subscription.endpoint.split('/').pop(); 
-                    console.log('Token FCM:', token);
-
-                    // Aquí puedes enviar el token a tu backend si es necesario
+            // Esperamos a que el Service Worker se active
+            if (registration.waiting) {
+                // Si ya está activado
+                subscribeToPushNotifications(registration);
+            } else {
+                // Si aún está esperando, se suscribe cuando se activa
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'activated') {
+                            subscribeToPushNotifications(registration);
+                        }
+                    });
                 });
+            }
         })
         .catch((error) => {
             console.error('Error al registrar el Service Worker o Push Notifications:', error);
         });
 } else {
     console.error('Service Workers no son soportados en este navegador.');
+}
+
+// Función para suscribirse a las notificaciones push
+function subscribeToPushNotifications(registration) {
+    registration.pushManager.getSubscription()
+        .then((subscription) => {
+            if (!subscription) {
+                // Clave pública de FCM (asegúrate de reemplazar con la clave correcta)
+                const applicationServerKey = 
+                    'BOKcIx93kERD-d3-rB0nS-3tRSYxYmXzdeOWa8gH7EU5TvpDMW2gRg44IwrriSVe3LFwuS6UeOMDA0_Oiop0Pmg';
+
+                // Suscribir al cliente
+                return registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+                });
+            }
+            return subscription; // Ya está suscrito
+        })
+        .then((subscription) => {
+            console.log('Suscripción Push:', subscription);
+
+            // Extraer el endpoint y el token
+            const token = subscription.endpoint.split('/').pop(); 
+            console.log('Token FCM:', token);
+
+            // Aquí puedes enviar el token a tu backend si es necesario
+        })
+        .catch((error) => {
+            console.error('Error al suscribirse a las notificaciones push:', error);
+        });
 }
 
 // Convertir clave base64 a Uint8Array
