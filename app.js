@@ -3,10 +3,45 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
         .then((registration) => {
             console.log('Service Worker registrado:', registration);
+
+            // Suscribimos al Service Worker para recibir notificaciones push
+            return registration.pushManager.getSubscription()
+                .then((subscription) => {
+                    if (!subscription) {
+                        // Clave pública de FCM (asegúrate de reemplazar con la clave correcta)
+                        const applicationServerKey = 
+                            'BOKcIx93kERD-d3-rB0nS-3tRSYxYmXzdeOWa8gH7EU5TvpDMW2gRg44IwrriSVe3LFwuS6UeOMDA0_Oiop0Pmg';
+                        
+                        // Suscribir al cliente
+                        return registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+                        });
+                    }
+                    return subscription;
+                })
+                .then((subscription) => {
+                    console.log('Suscripción Push:', subscription);
+                    // Aquí puedes enviar la suscripción a tu backend si es necesario
+                });
         })
         .catch((error) => {
             console.error('Error al registrar el Service Worker:', error);
         });
+}
+
+// Convertir clave base64 a Uint8Array
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
 
 // Maneja el formulario de tareas
@@ -42,23 +77,6 @@ document.getElementById('task-form').addEventListener('submit', (event) => {
                     }
                 });
             }
-        }
-
-        // Prueba para enviar notificación de forma opcional
-        // Solo se enviará si el navegador soporta notificaciones
-        if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    new Notification('¡Nueva tarea añadida!', {
-                        body: '¡Recuerda verificar tu lista!',
-                        icon: 'icon.png' // Asegúrate de que tienes este archivo en el directorio adecuado
-                    });
-                } else {
-                    console.log('Permiso de notificaciones denegado.');
-                }
-            }).catch(error => {
-                console.error('Error al solicitar permisos:', error);
-            });
         }
     }
 });
