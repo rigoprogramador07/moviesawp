@@ -16,12 +16,14 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open('task-cache-v1').then((cache) => {
             return cache.addAll([
-                '/', // Asegúrate de que la raíz esté incluida para que funcione en cualquier ruta
+                '/', // Asegúrate de que la raíz esté incluida
                 '/index.html',
                 '/style.css',
                 '/app.js',
                 '/manifest.json',
                 '/icon.png',
+                '/lib/owlcarousel/assets/owl.carousel.min.css', // Ejemplo de agregar más archivos estáticos
+                '/lib/lightbox/css/lightbox.min.css'
             ]);
         })
     );
@@ -50,7 +52,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
-                return cachedResponse;
+                return cachedResponse; // Devuelve la respuesta cacheada si existe
             }
             return fetch(event.request)
                 .then((response) => {
@@ -78,11 +80,11 @@ self.addEventListener('push', (event) => {
 
     const title = data.title || 'Notificación';
     const body = data.body || '¡Tienes una nueva tarea!';
-    
+
     const options = {
         body: body,
-        icon: 'icon.png',
-        badge: 'icon.png',
+        icon: '/icon.png', // Asegúrate de que la ruta sea correcta
+        badge: '/icon.png',
     };
 
     event.waitUntil(
@@ -95,6 +97,6 @@ self.addEventListener('notificationclick', (event) => {
     console.log('Notificación clickeada:', event);
     event.notification.close();
     event.waitUntil(
-        clients.openWindow('/')
+        clients.openWindow('/') // Puedes cambiar esta URL si necesitas abrir otra página
     );
 });
