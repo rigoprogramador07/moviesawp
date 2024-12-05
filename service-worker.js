@@ -22,11 +22,10 @@ self.addEventListener('install', (event) => {
                 '/app.js',
                 '/manifest.json',
                 '/icon.png',
-                '/lib/owlcarousel/assets/owl.carousel.min.css', // Ejemplo de agregar más archivos estáticos
-                '/lib/lightbox/css/lightbox.min.css'
-            ]);
+               ]);
         })
     );
+    self.skipWaiting(); // Fuerza la activación del SW inmediatamente
 });
 
 // Activar el Service Worker
@@ -38,12 +37,14 @@ self.addEventListener('activate', (event) => {
                 cacheNames.map((cacheName) => {
                     if (cacheName !== 'task-cache-v1') {
                         console.log('Cache obsoleto eliminado:', cacheName);
-                        return caches.delete(cacheName);
+                        return caches.delete(cacheName); // Elimina los caches viejos
                     }
                 })
             );
         })
     );
+    // Toma control inmediatamente de las páginas abiertas
+    return self.clients.claim();
 });
 
 // Interceptar las solicitudes de red
@@ -66,7 +67,7 @@ self.addEventListener('fetch', (event) => {
                 })
                 .catch((error) => {
                     console.error('Error al hacer la solicitud:', error);
-                    throw error; // Enviar el error para que se maneje correctamente en la UI
+                    throw error; // Maneja el error adecuadamente
                 });
         })
     );
@@ -97,6 +98,6 @@ self.addEventListener('notificationclick', (event) => {
     console.log('Notificación clickeada:', event);
     event.notification.close();
     event.waitUntil(
-        clients.openWindow('/') // Puedes cambiar esta URL si necesitas abrir otra página
+        clients.openWindow('/') // Cambia la URL si necesitas abrir otra página
     );
 });
