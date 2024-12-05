@@ -1,6 +1,5 @@
 // Verifica si el navegador soporta Service Workers
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-    // Registra el Service Worker
     navigator.serviceWorker.register('/service-worker.js')
         .then((registration) => {
             console.log('Service Worker registrado:', registration);
@@ -22,7 +21,9 @@ self.addEventListener('install', (event) => {
                 '/app.js',
                 '/manifest.json',
                 '/icon.png',
-               ]);
+                '/lib/owlcarousel/assets/owl.carousel.min.css',
+                '/lib/lightbox/css/lightbox.min.css'
+            ]);
         })
     );
     self.skipWaiting(); // Fuerza la activación del SW inmediatamente
@@ -78,14 +79,15 @@ self.addEventListener('push', (event) => {
     console.log('Notificación Push recibida:', event);
 
     const data = event.data ? event.data.json() : {};
-
     const title = data.title || 'Notificación';
     const body = data.body || '¡Tienes una nueva tarea!';
+    const icon = '/icon.png'; // Asegúrate de que la ruta sea correcta
+    const badge = '/icon.png';
 
     const options = {
         body: body,
-        icon: '/icon.png', // Asegúrate de que la ruta sea correcta
-        badge: '/icon.png',
+        icon: icon,
+        badge: badge,
     };
 
     event.waitUntil(

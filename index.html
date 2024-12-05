@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="style.css" rel="stylesheet">
@@ -26,6 +26,7 @@
     <!-- Main App Script -->
     <script defer src="app.js"></script>
 </head>
+
 <body>
     <script>
         // Registrar el Service Worker
@@ -43,11 +44,12 @@
                 <form id="task-form">
                     <input type="text" id="task-input" placeholder="Escribe una tarea..." required>
                     <button type="submit">Agregar</button>
-                    <button id="enable-notifications">Habilitar notificaciones</button>
+                    <button type="button" id="enable-notifications">Habilitar notificaciones</button>
                 </form>
                 <ul id="task-list"></ul>
             </div>
         </div>
     </section>
 </body>
+
 </html>
