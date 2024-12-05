@@ -1,10 +1,22 @@
+// Verifica si el navegador soporta Service Workers
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    // Registra el Service Worker
+    navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+            console.log('Service Worker registrado:', registration);
+        })
+        .catch((error) => {
+            console.error('Error al registrar el Service Worker:', error);
+        });
+}
+
 // Instalar el Service Worker
 self.addEventListener('install', (event) => {
     console.log('Service Worker instalado');
     event.waitUntil(
         caches.open('task-cache-v1').then((cache) => {
             return cache.addAll([
-                '/',
+                '/', // Asegúrate de que la raíz esté incluida para que funcione en cualquier ruta
                 '/index.html',
                 '/style.css',
                 '/app.js',
@@ -40,7 +52,20 @@ self.addEventListener('fetch', (event) => {
             if (cachedResponse) {
                 return cachedResponse;
             }
-            return fetch(event.request);
+            return fetch(event.request)
+                .then((response) => {
+                    // Verifica si la respuesta es válida antes de cachearla
+                    if (response && response.status === 200 && response.type === 'basic') {
+                        caches.open('task-cache-v1').then((cache) => {
+                            cache.put(event.request, response.clone());
+                        });
+                    }
+                    return response;
+                })
+                .catch((error) => {
+                    console.error('Error al hacer la solicitud:', error);
+                    throw error; // Enviar el error para que se maneje correctamente en la UI
+                });
         })
     );
 });
@@ -49,14 +74,11 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     console.log('Notificación Push recibida:', event);
 
-    // Asegúrate de que el evento contiene datos
     const data = event.data ? event.data.json() : {};
-    
-    // Establecer título y cuerpo con valores predeterminados si no existen
+
     const title = data.title || 'Notificación';
     const body = data.body || '¡Tienes una nueva tarea!';
     
-    // Opciones para la notificación
     const options = {
         body: body,
         icon: 'icon.png',
@@ -73,7 +95,6 @@ self.addEventListener('notificationclick', (event) => {
     console.log('Notificación clickeada:', event);
     event.notification.close();
     event.waitUntil(
-        // Abrir la ventana principal o una URL específica
         clients.openWindow('/')
     );
 });
