@@ -1,6 +1,6 @@
 {
-  "name": "Cinemarte-AWP",
-  "short_name": "Cinemarte",
+  "name": "Peliculas Nuevas",
+  "short_name": "Peliculas",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
