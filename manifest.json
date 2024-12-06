@@ -7,12 +7,12 @@
   "theme_color": "#ff7f00", 
   "icons": [
     {
-      "src": "Webp.net-resizeimage.png",
+      "src": "Webp.net-resizeimage (1).png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "Webp.net-resizeimage (1).png",
+      "src": "Webp.net-resizeimage.png",
       "sizes": "512x512",
       "type": "image/png"
     }
